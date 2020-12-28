@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import SearchResults from './SearchResults';
 import {Link} from 'react-router-dom';
+import toast from './Popup'
 
 
 const Search = () => {
@@ -22,6 +23,13 @@ const Search = () => {
         const addusers = JSON.parse(localStorage.getItem("users"))
         setAddUsers(addusers)
     }, [])
+
+    const removeUser = (user) => {
+        const users = addusers.filter(olduser => olduser.login != user.login)
+        setAddUsers(users)
+        localStorage.setItem("users", JSON.stringify(users))
+        toast("deleted successfully")
+    }
 
     const fetchUsers = () => {
         if(searchText){
@@ -46,15 +54,18 @@ const Search = () => {
     return(
         <div style={{marginTop: "40px"}} className="container">
             <h4>Search Github Users</h4>
-            <input style={{marginBottom: "30px"}}type="text" placeholder="please enter username" onChange={e => {setSearchText(e.target.value)}} /> 
+            <input style={{marginBottom: "30px"}}type="text" placeholder="Please Enter Original Username" onChange={e => {setSearchText(e.target.value)}} /> 
             {loading ? <p>loading.....</p> : <SearchResults user={users} />}
             <p>{(error) && error}</p>
             {addusers && addusers.length > 0 ? (
                 <div>
                     <h3>Added users</h3>
-                    <ul class="collection">
+                    <ul className="collection">
                         {addusers.map(user => {
-                            return <li className="collection-item"><Link to={`/user/${user.login}`}>{user.login}</Link></li>
+                            return <li key={user.login} className="collection-item">
+                                <Link to={`/user/${user.login}`}>{user.login}</Link>
+                                <span onClick={() => {removeUser(user)}} style={{textDecoration: "underline", cursor: "pointer", marginLeft: "20px"}}>Remove User</span>
+                            </li>
                         })}
                     </ul>
                 </div>

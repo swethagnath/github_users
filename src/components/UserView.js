@@ -9,6 +9,8 @@ const UserView = props => {
         setUser(user[0])
     }, [])
 
+    
+
     return(
         <div style={{marginTop: "40px"}} className="container">
            {user && (
