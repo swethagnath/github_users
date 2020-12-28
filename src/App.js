@@ -1,26 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter, Route} from 'react-router-dom'
+
+import Search from './components/SearchBox'
+import { useEffect } from 'react';
+import UserView from './components/UserView'
 
 function App() {
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("users"))
+    if(!user){
+      localStorage.setItem("users", JSON.stringify([]))
+    }
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Route exact path="/">
+          <Search/>
+        </Route>
+        <Route exact path="/user/:id" component={UserView} />
+      </BrowserRouter>
     </div>
   );
+
 }
 
 export default App;
